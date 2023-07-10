@@ -1,9 +1,12 @@
 from os import environ
+from pathlib import Path
 
 from dotenv import load_dotenv
 from loguru import logger
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
 
 # SECRET KEYS
 API_KEY = environ.get('API_KEY')
@@ -16,6 +19,6 @@ REDIS_PORT = environ.get('REDIS_PORT')
 ADMINS = environ.get('ADMINS').split(' ')
 
 # LOGGING
-logger.add('src/logs/main.log',
+logger.add(BASE_DIR / 'logs/main.log',
            format='{time:D MMMM - YYYY > HH:mm:ss} | {file} | {level} | {message}',
            rotation='10 MB', compression='zip', serialize=False, level='ERROR')

@@ -19,7 +19,7 @@ def wait_answer_by_gpt(func):
         if await r.get(f'ask:{user_id}'):
             await r.close()
             return
-        await r.set(f'ask:{user_id}', 'true', 90)
+        await r.set(f'ask:{user_id}', 'true', 110)
         return await func(message)
     return wrapper
 

@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
-from aiogram.utils.exceptions import CantParseEntities
+from aiogram.utils.exceptions import CantParseEntities, MessageToDeleteNotFound
 
 from middleware import wait_answer_by_gpt, AntiFloodMiddleware, r
 from openai_api import generate_answer
@@ -32,7 +32,10 @@ async def ask(message: types.Message) -> None:
     user_id = message.from_user.id
     await message.answer('Ща отвечу, жди')
     answer = await generate_answer(message.text, user_id)
-    await bot.delete_message(message.chat.id, message.message_id + 1)
+    try:
+        await bot.delete_message(message.chat.id, message.message_id + 1)
+    except MessageToDeleteNotFound:
+        pass
     try:
         await message.answer(answer)
     except CantParseEntities:
